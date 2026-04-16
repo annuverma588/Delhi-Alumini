@@ -1,14 +1,24 @@
 import { useLanguage } from '../context/LanguageContext';
 
 const membersData = [
-  { img: 'https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=300&q=80', name: 'Ananya Sharma', title: 'Founder & Trustee', role: 'Social Worker', quote: 'Every child deserves a safe space.' },
-  { img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&q=80', name: 'Ramesh Nair', title: 'Sr. Trustee', role: 'IAS (Retd.)', quote: 'Policy meets purpose here.' },
-  { img: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=300&q=80', name: 'Priya Menon', title: 'Program Director', role: 'Public Health', quote: 'Health is the first right.' },
-  { img: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&q=80', name: 'Vikram Joshi', title: 'President', role: 'Economist', quote: 'Change is data + empathy.' },
-  { img: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=300&q=80', name: 'Kavya Iyer', title: 'Field Coordinator', role: 'Social Work', quote: 'Grassroots is where magic is.' },
-  { img: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&q=80', name: 'Arjun Singh', title: 'Education Lead', role: 'Teacher & Mentor', quote: 'A book is a superpower.' },
-  { img: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=300&q=80', name: 'Meena Pillai', title: 'Health Coordinator', role: 'Nurse & Activist', quote: 'Healing begins with dignity.' },
-  { img: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=300&q=80', name: 'Rohan Mehta', title: 'Tech Lead', role: 'Software Engineer', quote: 'Code can change the world.' },
+  { img: '/President.png', name: 'Mr. Atul Tripathi', title: 'President', role: 'Delhi Govt School Alumni Association', quote: '' },
+  { img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQE8Urcc0waypyf-L8wKcHBX9bQZCyJ___PfA&s', name: 'Mr. Ramendra Mishra', title: 'Faculty UPSC', role: 'UPSC', quote: '' },
+  { img: 'https://randomuser.me/api/portraits/men/46.jpg', name: 'Dr. Vinod Kumar', title: 'Deputy Director', role: 'ICHR', quote: '' },
+  { img: '', name: 'Dr. Mohit Tiwari', title: 'Doctor', role: '', quote: '' },
+  { img: 'https://www.arcinstitute.in/Anil_sir.jpeg', name: 'Anil Upadhyay', title: 'Founder (SEF SEF Foundation) ', role: 'SEF Foundation', quote: '' },
+  { img: 'https://randomuser.me/api/portraits/men/49.jpg', name: 'Mukesh Kumar', title: 'Principal', role: 'DOE', quote: '' },
+  { img: 'https://randomuser.me/api/portraits/men/50.jpg', name: 'Suresh Kumar', title: 'Principal', role: 'DOE', quote: '' },
+  { img: 'https://randomuser.me/api/portraits/women/51.jpg', name: 'Monika Vishwash', title: 'Principal', role: 'DOE', quote: '' },
+  { img: 'https://randomuser.me/api/portraits/women/52.jpg', name: 'Nidhi', title: '', role: 'DOE', quote: '' },
+  { img: 'https://randomuser.me/api/portraits/women/53.jpg', name: 'Parul Jain', title: 'Journalist', role: '', quote: '' },
+  { img: 'https://randomuser.me/api/portraits/men/54.jpg', name: 'Hemant Baisla', title: 'Advocate', role: '', quote: '' },
+  { img: 'https://randomuser.me/api/portraits/men/55.jpg', name: 'Vijay Ji', title: 'Retd.', role: 'Italian Trade Commission', quote: '' },
+  { img: 'https://randomuser.me/api/portraits/men/56.jpg', name: 'Rakesh Khatri Ji', title: 'Nest Man of India', role: '', quote: '' },
+  { img: 'https://randomuser.me/api/portraits/men/57.jpg', name: 'Deepak', title: 'CA', role: '', quote: '' },
+  { img: 'https://randomuser.me/api/portraits/men/58.jpg', name: 'Ratan Deep', title: '', role: 'Shiva Ji College', quote: '' },
+  { img: 'https://randomuser.me/api/portraits/men/59.jpg', name: 'Shubham Tevatia', title: '', role: 'Delhi Police', quote: '' },
+  { img: 'https://randomuser.me/api/portraits/men/60.jpg', name: 'Divyanshu Malhotra', title: '', role: 'DD News Media', quote: '' },
+  { img: 'https://randomuser.me/api/portraits/men/61.jpg', name: 'Arvind Tiwari', title: 'Retd.', role: 'DOE', quote: '' },
 ];
 
 export default function Members() {

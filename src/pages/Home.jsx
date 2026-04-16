@@ -1,208 +1,395 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
-import { cn } from '../lib/utils';
+import Members from './Members';
+import MissionSection from './Mission';
+import './Hero.css';
 
-// Helper component for animating numbers
 const AnimatedCounter = ({ target }) => {
   const [count, setCount] = useState(0);
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-50px" });
+  const isInView = useInView(ref, { once: true, margin: '-50px' });
 
   useEffect(() => {
-    if (isInView) {
-      const duration = 2000;
-      const steps = 60;
-      const stepTime = duration / steps;
-      let current = 0;
-      const timer = setInterval(() => {
-        current += target / steps;
-        if (current >= target) {
-          setCount(target);
-          clearInterval(timer);
-        } else {
-          setCount(Math.floor(current));
-        }
-      }, stepTime);
-      return () => clearInterval(timer);
-    }
+    if (!isInView) return undefined;
+    const duration = 1800;
+    const steps = 60;
+    const stepTime = duration / steps;
+    let current = 0;
+    const timer = setInterval(() => {
+      current += target / steps;
+      if (current >= target) {
+        setCount(target);
+        clearInterval(timer);
+      } else {
+        setCount(Math.floor(current));
+      }
+    }, stepTime);
+    return () => clearInterval(timer);
   }, [isInView, target]);
 
   return <span ref={ref}>{count.toLocaleString('en-IN')}</span>;
 };
 
+const president = {
+  img: '/President.png',
+  enName: 'Mr. Atul Tripathi',
+  hiName: 'श्री अतुल त्रिपाठी',
+  enRole: 'President ',
+  hiRole: 'प्रेसिडेंट',
+  enBio:
+    'Delhi Government School alumni leader Dr. Ananya Sharma built this initiative around dignity, mentorship, and access. Her vision keeps our alumni network connected to students who need guidance, exposure, and opportunities.',
+  hiBio:
+    'दिल्ली सरकारी विद्यालयों की पूर्व छात्र नेता डॉ. अनन्या शर्मा ने इस पहल को गरिमा, मार्गदर्शन और अवसरों के विचार पर खड़ा किया। उनकी सोच आज भी हमारे पूर्व छात्रों को विद्यार्थियों से जोड़ती है ताकि उन्हें दिशा, exposure और सही अवसर मिल सकें।',
+};
+
+const memberCards = [
+  {
+    img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&q=85',
+    enName: 'Ramesh Nair',
+    hiName: 'रमेश नायर',
+    enRole: 'Strategy Mentor',
+    hiRole: 'स्ट्रैटेजी मेंटर',
+    enText: 'Builds partnerships with schools, district teams, and alumni groups.',
+    hiText: 'विद्यालयों, जिला टीमों और पूर्व छात्र समूहों के साथ साझेदारी बनाते हैं।',
+  },
+  {
+    img: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=500&q=85',
+    enName: 'Priya Menon',
+    hiName: 'प्रिया मेनन',
+    enRole: 'Program Lead',
+    hiRole: 'कार्यक्रम प्रमुख',
+    enText: 'Designs mentorship, wellness, and guidance activities for students.',
+    hiText: 'विद्यार्थियों के लिए मार्गदर्शन, वेलनेस और मेंटरशिप कार्यक्रम तैयार करती हैं।',
+  },
+  {
+    img: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=500&q=85',
+    enName: 'Rohan Mehta',
+    hiName: 'रोहन मेहता',
+    enRole: 'Digital Coordinator',
+    hiRole: 'डिजिटल समन्वयक',
+    enText: 'Makes communication, registration, and volunteer coordination smoother.',
+    hiText: 'कम्युनिकेशन, रजिस्ट्रेशन और वॉलंटियर समन्वय को आसान बनाते हैं।',
+  },
+];
+
+const workCards = [
+  {
+    img: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=900&q=85',
+    enTitle: 'Mentorship Sessions',
+    hiTitle: 'मेंटॉरशिप सत्र',
+    enDesc: 'Alumni guide students with career exposure, confidence building, and practical advice.',
+    hiDesc: 'पूर्व छात्र विद्यार्थियों को करियर समझ, आत्मविश्वास और व्यावहारिक सलाह देते हैं।',
+  },
+  {
+    img: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=900&q=85',
+    enTitle: 'Community Network',
+    hiTitle: 'समुदाय नेटवर्क',
+    enDesc: 'We connect alumni across Delhi to support schools, events, and student-led growth.',
+    hiDesc: 'हम दिल्ली भर के पूर्व छात्रों को विद्यालयों, कार्यक्रमों और छात्र विकास से जोड़ते हैं।',
+  },
+  {
+    img: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=900&q=85',
+    enTitle: 'Youth Opportunities',
+    hiTitle: 'युवा अवसर',
+    enDesc: 'Students receive access to workshops, scholarships, volunteering, and leadership spaces.',
+    hiDesc: 'विद्यार्थियों को वर्कशॉप, छात्रवृत्ति, स्वयंसेवा और नेतृत्व के अवसर मिलते हैं।',
+  },
+];
+
+const stats = [
+  { value: 18620, suffix: '+', enLabel: 'Students Reached', hiLabel: 'विद्यार्थी जुड़े' },
+  { value: 490, suffix: '+', enLabel: 'Active Volunteers', hiLabel: 'सक्रिय स्वयंसेवक' },
+  { value: 300, suffix: '+', enLabel: 'Schools Connected', hiLabel: 'विद्यालय जुड़े' },
+];
+
 export default function Home() {
   const { lang } = useLanguage();
   const t = (en, hi) => (lang === 'hi' ? hi : en);
+  const heroRef = useRef(null);
+  const videoRef = useRef(null);
 
-  const slides = [
-    'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=1800&q=85',
-    'https://images.unsplash.com/photo-1529390079861-591de354faf5?w=1800&q=85',
-    'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=1800&q=85'
-  ];
-  const [slideIdx, setSlideIdx] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
+  const [scrolled, setScrolled] = useState(false);
+  const [scrollY, setScrollY] = useState(0);
 
   useEffect(() => {
-    const int = setInterval(() => setSlideIdx((p) => (p + 1) % slides.length), 4500);
-    return () => clearInterval(int);
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY || document.documentElement.scrollTop;
+      setScrollY(currentScrollY);
+
+      const heroHeight = heroRef.current ? heroRef.current.offsetHeight : 600;
+      const progress = Math.min(currentScrollY / (heroHeight * 0.45), 1);
+
+      if (progress > 0.15) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const scrollToSection = (selector) => {
+    document.querySelector(selector)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  const toggleMute = (e) => {
+    e.stopPropagation();
+    setIsMuted(!isMuted);
+    if (videoRef.current) {
+      videoRef.current.muted = !isMuted;
+    }
+  };
+
+  const contentVariants = {
+    hidden: { opacity: 0, y: 18, pointerEvents: 'none' },
+    visible: { opacity: 1, y: 0, pointerEvents: 'auto', transition: { duration: 0.65, ease: [0.4, 0, 0.2, 1] } },
+    fading: { opacity: 0, y: -14, transition: { duration: 0.65, ease: [0.4, 0, 0.2, 1] } }
+  };
+
+  const hintVariants = {
+    hidden: { opacity: 0, pointerEvents: 'none', transition: { duration: 0.4 } },
+    visible: { opacity: 1, pointerEvents: 'none', transition: { duration: 0.4 } }
+  };
+
+  const indicatorVariants = {
+    hidden: { opacity: 0, pointerEvents: 'none', transition: { duration: 0.4 } },
+    visible: { opacity: 1, pointerEvents: 'none', transition: { duration: 0.4 } }
+  };
+
+  let contentState = 'hidden';
+  if (scrolled) contentState = 'fading';
+  else if (isHovered) contentState = 'visible';
+
+  let hintState = (!scrolled && !isHovered) ? 'visible' : 'hidden';
+  let indicatorState = !scrolled ? 'visible' : 'hidden';
+
+  const parallax = scrollY * 0.28;
+  const progressStat = Math.min(scrollY / ((heroRef.current?.offsetHeight || 600) * 0.45 || 1), 1);
+  const stripOpacity = Math.max(0, 1 - progressStat * 2.5);
+  const statTransform = `translateY(${progressStat * 12}px)`;
+
   return (
-    <div className="bg-[var(--color-bg)] w-full relative">
-      {/* HERO SECTION */}
-      <section className="h-screen relative flex items-center overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          {slides.map((src, i) => (
-            <div
-              key={i}
-              className={cn("absolute inset-0 bg-cover bg-center transition-opacity duration-[1600ms] ease-in-out", slideIdx === i ? "opacity-100" : "opacity-0")}
-              style={{ backgroundImage: `url(${src})` }}
-            />
-          ))}
-        </div>
-        <div className="absolute inset-0 z-[1] bg-[linear-gradient(105deg,rgba(253,248,242,0.96)_0%,rgba(253,248,242,0.85)_40%,rgba(253,248,242,0.15)_100%)]" />
-        
-        <div className="relative z-[2] w-full px-6 md:px-14 grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-          <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1 }}>
-            <div className="inline-flex items-center gap-[0.6rem] bg-[rgba(193,68,14,0.1)] border border-[rgba(193,68,14,0.2)] rounded-full py-[0.45rem] px-[1.2rem] mb-8">
-              <span className="w-[7px] h-[7px] bg-[var(--color-terra)] rounded-full animate-pulse" />
-              <span className="text-[0.72rem] font-bold tracking-[0.1em] uppercase text-[var(--color-terra)]">
-                {t("Raise Your Helping Hand For", "मदद का हाथ बढ़ाएं")}
-              </span>
-            </div>
-            <h1 className="font-serif text-[clamp(3rem,6vw,5.5rem)] font-black leading-[1.05] mb-6 text-[var(--color-text-main)]">
-              {t("Helpless", "असहाय")}<br />
-              <span className="text-[var(--color-terra)] italic">{t("Children", "बच्चों")}</span><br />
-              <span className="text-[var(--color-sage)]">{t("Need You", "की ज़रूरत है")}</span>
-            </h1>
-            <p className="text-[1rem] font-normal text-[var(--color-mid)] leading-[1.8] max-w-[460px] mb-10">
-              {t("Together we can bring change and build a better future — creating safe, nurturing aangans (courtyards) where every child can grow, dream, and belong.", "मिलकर हम बदलाव ला सकते हैं और एक बेहतर भविष्य बना सकते हैं — सुरक्षित, पोषण भरे आँगन बनाना जहाँ हर बच्चा बढ़ सके, सपने देख सके और अपनापन महसूस करे।")}
-            </p>
-            <div className="flex gap-4 items-center flex-wrap">
-              <Link to="/donate" className="bg-[var(--color-terra)] text-white py-4 px-10 rounded-full text-[0.88rem] font-bold no-underline shadow-[0_6px_20px_rgba(193,68,14,0.35)] transition-all duration-300 hover:bg-[var(--color-terra-2)] hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(193,68,14,0.4)] inline-block">
-                {t("Donate Now", "अभी दान करें")}
-              </Link>
-              <Link to="/about" className="bg-transparent text-[var(--color-sage)] border-2 border-[var(--color-sage)] py-[0.9rem] px-10 rounded-full text-[0.88rem] font-bold no-underline transition-all duration-300 hover:bg-[var(--color-sage)] hover:text-white inline-block">
-                {t("Our Story", "हमारी कहानी")}
-              </Link>
-            </div>
-            
-            <div className="flex items-center gap-4 mt-8">
-              <div className="flex">
-                <img src="https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=80&q=80" className="w-[36px] h-[36px] rounded-full border-2 border-white object-cover" alt="" />
-                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&q=80" className="w-[36px] h-[36px] rounded-full border-2 border-white object-cover -ml-2.5 relative z-10" alt="" />
-                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&q=80" className="w-[36px] h-[36px] rounded-full border-2 border-white object-cover -ml-2.5 relative z-20" alt="" />
-              </div>
-              <span className="text-[0.82rem] text-[var(--color-mid)]" dangerouslySetInnerHTML={{ __html: t("Trusted by <strong class='text-[var(--color-terra)]'>8,400+ donors</strong> across India", "पूरे भारत में <strong class='text-[var(--color-terra)]'>8,400+ दानदाताओं</strong> का विश्वास") }} />
-            </div>
-          </motion.div>
-          
-          <div className="hidden md:block relative">
-            <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=900&q=85" alt="Happy children" className="w-full h-[570px] object-cover rounded-[24px] shadow-[0_24px_60px_rgba(44,31,20,0.2)]" />
-            <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.5 }} className="absolute -bottom-6 -left-8 bg-white rounded-2xl py-5 px-6 shadow-[0_12px_40px_rgba(44,31,20,0.15)] min-w-[160px]">
-              <span className="font-serif text-[2rem] font-black text-[var(--color-terra)] block">18K+</span>
-              <span className="text-[0.7rem] font-bold tracking-[0.1em] uppercase text-[var(--color-mid)]">{t("LIVES CHANGED", "जीवन बदले")}</span>
-            </motion.div>
-            <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.7 }} className="absolute top-8 -right-6 bg-[var(--color-sage)] rounded-2xl py-5 px-6 shadow-[0_12px_40px_rgba(74,124,89,0.3)] min-w-[150px]">
-              <span className="font-serif text-[1.8rem] font-black text-white block">97%</span>
-              <span className="text-[0.7rem] font-bold tracking-[0.1em] uppercase text-white/70">{t("FUND UTILIZATION", "फंड उपयोग")}</span>
-            </motion.div>
+    <div className="relative w-full overflow-hidden bg-[var(--color-bg)]">
+      <div
+        className="hero"
+        id="hero"
+        ref={heroRef}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        <video
+          className="video-bg"
+          id="videoBg"
+          autoPlay
+          muted
+          loop
+          playsInline
+          ref={videoRef}
+          style={{ transform: `translateY(${parallax}px) scale(1.04)` }}
+        >
+          <source src="/video.mp4" type="video/mp4" />
+        </video>
+
+        <div className="gradient-overlay"></div>
+
+        <button className="sound-btn" id="soundBtn" title="Toggle sound" aria-label="Toggle sound" onClick={toggleMute}>
+          {isMuted ? (
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+            </svg>
+          ) : (
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" />
+            </svg>
+          )}
+        </button>
+
+        {/* ── HERO CONTENT — hover se aata hai ── */}
+        <motion.div
+          className="hero-content"
+          id="heroContent"
+          initial="hidden"
+          animate={contentState}
+          variants={contentVariants}
+        >
+          <p className="tagline">
+            {t('Connecting Alumni. Empowering Students.', 'पूर्व छात्रों को जोड़ना। विद्यार्थियों को सशक्त बनाना।')}
+            {' '}<span className="heart">🎓</span>
+          </p>
+          <p className="subtitle">
+            {t(
+              'Delhi Alumni Group is a nonprofit uniting government school alumni to mentor, guide, and uplift the next generation of Delhi\'s youth.',
+              'दिल्ली एलुमनी ग्रुप एक NGO है जो सरकारी विद्यालयों के पूर्व छात्रों को एकजुट करती है — ताकि दिल्ली की अगली पीढ़ी को मार्गदर्शन, प्रेरणा और अवसर मिल सके।'
+            )}
+          </p>
+          <div className="cta-group">
+            <button className="btn-primary" onClick={() => scrollToSection('#contact')}>
+              {t('Join the Movement', 'अभियान से जुड़ें')}
+            </button>
+            <button className="btn-secondary" onClick={() => scrollToSection('#about')}>
+              {t('Our Story', 'हमारी कहानी')}
+            </button>
+          </div>
+        </motion.div>
+
+        <motion.div
+          className="hover-hint"
+          id="hoverHint"
+          initial="hidden"
+          animate={hintState}
+          variants={hintVariants}
+        >
+          {t('Hover to reveal', 'देखने के लिए होवर करें')}
+        </motion.div>
+
+        <motion.div
+          className="scroll-indicator"
+          id="scrollIndicator"
+          initial="hidden"
+          animate={indicatorState}
+          variants={indicatorVariants}
+        >
+          <span className="scroll-label">{t('Scroll', 'स्क्रॉल करें')}</span>
+          <div className="scroll-line"></div>
+        </motion.div>
+
+        {/* ── STAT STRIP ── */}
+        <div className="stat-strip" id="statStrip" style={{ opacity: stripOpacity, transform: statTransform }}>
+          <div className="stat">
+            <div className="stat-num">18K+</div>
+            <div className="stat-label">{t('Students Reached', 'विद्यार्थी जुड़े')}</div>
+          </div>
+          <div className="stat">
+            <div className="stat-num">300+</div>
+            <div className="stat-label">{t('Schools Connected', 'विद्यालय जुड़े')}</div>
+          </div>
+          <div className="stat">
+            <div className="stat-num">490+</div>
+            <div className="stat-label">{t('Active Volunteers', 'सक्रिय स्वयंसेवक')}</div>
           </div>
         </div>
-        
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[3] flex gap-2.5">
-          {slides.map((_, i) => (
-            <div key={i} onClick={() => setSlideIdx(i)} className={cn("w-2 h-2 rounded-full cursor-pointer transition-all duration-300", slideIdx === i ? "bg-[var(--color-terra)] w-6" : "bg-[rgba(44,31,20,0.25)]")} />
-          ))}
-        </div>
-      </section>
 
-      {/* QUICK CARDS */}
-      <section className="py-20 px-6 md:px-14 bg-[var(--color-bg-2)]">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[
-            { icon: '🤝', enTitle: 'Become a Volunteer', hiTitle: 'स्वयंसेवक बनें', enDesc: 'Be present. Teach, play, mentor. Children need role models just as much as resources.', hiDesc: 'उपस्थित रहें। पढ़ाएं, खेलें, मार्गदर्शन करें। बच्चों को संसाधनों जितने ही आदर्शों की ज़रूरत होती है।', to: '/contact', enLink: 'Get Involved', hiLink: 'जुड़ें' },
-            { icon: '🌸', enTitle: 'Give a Donation', hiTitle: 'दान दें', enDesc: 'Fund meals, books, dreams, and smiles. ₹500 feeds a child for a week.', hiDesc: 'भोजन, किताबें, सपने और मुस्कान फंड करें। ₹500 से एक बच्चे को एक हफ्ते का भोजन मिलता है।', to: '/donate', enLink: 'Donate Today', hiLink: 'आज दान करें' },
-            { icon: '🎓', enTitle: 'Give Scholarship', hiTitle: 'छात्रवृत्ति दें', enDesc: 'Sponsor a child\'s education for a full year — fees, books, uniform, and learning materials.', hiDesc: 'एक साल के लिए बच्चे की पढ़ाई प्रायोजित करें — फीस, किताबें, वर्दी और सभी सामग्री।', to: '/donate', enLink: 'Sponsor a Child', hiLink: 'बच्चे को प्रायोजित करें' }
-          ].map((card, i) => (
-            <motion.div key={i} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1, duration: 0.6 }} className="group bg-white rounded-[20px] p-10 shadow-[0_4px_24px_rgba(44,31,20,0.06)] transition-all duration-400 cursor-pointer border-2 border-transparent relative overflow-hidden hover:-translate-y-2 hover:border-[var(--color-terra)] hover:shadow-[0_20px_50px_rgba(193,68,14,0.2)] flex flex-col items-start">
-              <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-terra)] to-[var(--color-terra-2)] opacity-0 transition-opacity duration-400 z-0 group-hover:opacity-100" />
-              <div className="w-[56px] h-[56px] bg-[rgba(193,68,14,0.1)] rounded-[14px] flex items-center justify-center mb-6 transition-colors duration-400 relative z-10 group-hover:bg-white/20">
-                <span className="text-2xl relative z-10 text-white !text-[var(--color-text-main)] group-hover:!text-white leading-none">{card.icon}</span>
-              </div>
-              <h3 className="font-serif text-[1.35rem] font-bold text-[var(--color-text-main)] mb-3 relative z-10 transition-colors duration-400 group-hover:text-white">{t(card.enTitle, card.hiTitle)}</h3>
-              <p className="text-[0.86rem] text-[var(--color-mid)] leading-[1.7] mb-6 relative z-10 transition-colors duration-400 group-hover:text-white/90">{t(card.enDesc, card.hiDesc)}</p>
-              <Link to={card.to} className="mt-auto text-[0.8rem] font-bold text-[var(--color-terra)] no-underline flex items-center gap-1.5 transition-all duration-400 relative z-10 group-hover:text-white">
-                {t(card.enLink, card.hiLink)} <span className="group-hover:translate-x-1 transition-transform inline-block">→</span>
-              </Link>
-            </motion.div>
-          ))}
-        </div>
-      </section>
+      </div>
 
-      {/* STATS */}
-      <section className="bg-[var(--color-text-main)] py-20 px-6 md:px-14">
-        <div className="grid grid-cols-1 md:grid-cols-[1fr_3fr] gap-16 items-center">
-          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <h2 className="font-serif text-[clamp(2rem,4vw,3rem)] text-white font-black leading-[1.2]" dangerouslySetInnerHTML={{ __html: t("Impact That Speaks <em class='text-[var(--color-terra-light)] not-italic'>Louder</em> Than Words", "प्रभाव जो शब्दों से <em class='text-[var(--color-terra-light)] not-italic'>ज़्यादा</em> बोलता है") }} />
-            <p className="text-white/50 text-[0.88rem] leading-[1.7] mt-4">{t('Seventeen years. Ten states. Eighteen thousand children.', 'सत्रह साल। दस राज्य। अठारह हज़ार बच्चे।')}</p>
+      {/* ── BAAKI SAARA CODE SAME ── */}
+
+      <section id="about" className="bg-[var(--color-bg-2)] px-6 py-24 md:px-14">
+        <div className="mx-auto grid max-w-7xl items-center gap-14 md:grid-cols-[0.88fr_1.12fr]">
+          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="flex flex-col items-center text-center md:items-start md:text-left">
+            <div className="relative mb-6 flex h-[270px] w-[270px] items-center justify-center rounded-full border-[8px] border-[rgba(193,68,14,0.12)] bg-white shadow-[0_18px_50px_rgba(44,31,20,0.12)]">
+              <div className="absolute inset-[-16px] rounded-full border border-dashed border-[rgba(193,68,14,0.3)]" />
+              <img src={president.img} alt={t(president.enName, president.hiName)} className="h-[220px] w-[220px] rounded-full object-cover" />
+            </div>
+            <h2 className="font-serif text-[2rem] font-black text-[var(--color-text-main)]">{t(president.enName, president.hiName)}</h2>
+            <p className="mt-2 text-[0.78rem] font-bold uppercase tracking-[0.18em] text-[var(--color-terra)]">{t(president.enRole, president.hiRole)}</p>
           </motion.div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {[
-              { t: 18620, u: '+', enL: 'Children Supported', hiL: 'बच्चों की मदद' },
-              { t: 7, u: 'Cr+', enL: 'Raised Since 2007', hiL: '2007 से जुटाए', pre: '₹' },
-              { t: 490, u: '+', enL: 'Volunteers Active', hiL: 'सक्रिय स्वयंसेवक' },
-              { t: 62, u: '', enL: 'Learning Centres', hiL: 'शिक्षा केंद्र' }
-            ].map((st, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="bg-white/5 border border-white/10 rounded-2xl p-8 transition-colors hover:bg-[rgba(193,68,14,0.15)] hover:border-[rgba(193,68,14,0.3)]">
-                <span className="font-serif text-[3rem] font-black text-[var(--color-terra-light)] block leading-none">
-                  {st.pre}<AnimatedCounter target={st.t} />{st.u}
-                </span>
-                <span className="text-[0.73rem] font-bold tracking-[0.15em] uppercase text-white/40 mt-1.5 block">{t(st.enL, st.hiL)}</span>
+
+          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <div className="mb-4 text-[0.72rem] font-bold uppercase tracking-[0.18em] text-[var(--color-terra)]">{t('About the Movement', 'हमारी पहल के बारे में')}</div>
+            <h2 className="font-serif text-[clamp(2.1rem,4vw,3.4rem)] font-black leading-[1.12] text-[var(--color-text-main)]">{t('An alumni movement rooted in pride and service', 'गौरव और सेवा से जुड़ा पूर्व छात्र अभियान')}</h2>
+            <p className="mt-6 max-w-[720px] text-[1rem] leading-8 text-[var(--color-mid)]">{t(president.enBio, president.hiBio)}</p>
+            <p className="mt-5 max-w-[720px] text-[1rem] leading-8 text-[var(--color-mid)]">
+              {t('We are shaping a platform where successful alumni can return to schools with purpose, share experience with honesty, and help students imagine a wider future for themselves.', 'हम ऐसा मंच बना रहे हैं जहाँ सफल पूर्व छात्र उद्देश्य के साथ अपने विद्यालयों से फिर जुड़ें, ईमानदारी से अपने अनुभव साझा करें और विद्यार्थियों को बड़ा भविष्य देखने में मदद दें।')}
+            </p>
+            <div className="mt-8 flex flex-wrap gap-4">
+              <Link to="/about" className="inline-block rounded-full bg-[var(--color-terra)] px-7 py-3.5 text-[0.86rem] font-bold text-white no-underline transition-all hover:-translate-y-1 hover:bg-[var(--color-terra-2)]">{t('Read Full Story', 'पूरी कहानी पढ़ें')}</Link>
+              <Link to="/presidents" className="inline-block rounded-full border border-[var(--color-border)] bg-white px-7 py-3.5 text-[0.86rem] font-bold text-[var(--color-text-main)] no-underline transition-all hover:border-[var(--color-terra)] hover:text-[var(--color-terra)]">{t('Meet Leadership', 'नेतृत्व से मिलें')}</Link>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      <Members />
+      <section className="bg-[var(--color-bg)] px-6 py-24 md:px-14">
+        <div className="mx-auto max-w-7xl">
+          <div className="mb-12 max-w-[680px]">
+            <div className="text-[0.72rem] font-bold uppercase tracking-[0.18em] text-[var(--color-terra)]">{t('Member Section', 'सदस्य अनुभाग')}</div>
+            <h2 className="mt-3 font-serif text-[clamp(2rem,4vw,3.2rem)] font-black leading-[1.14] text-[var(--color-text-main)]">{t('People who keep the community active', 'वे लोग जो समुदाय को सक्रिय रखते हैं')}</h2>
+            <p className="mt-4 text-[0.98rem] leading-8 text-[var(--color-mid)]">{t('Every initiative moves forward because dedicated members contribute time, expertise, and a strong sense of responsibility.', 'हर पहल इसलिए आगे बढ़ती है क्योंकि समर्पित सदस्य अपना समय, अनुभव और जिम्मेदारी के भाव के साथ योगदान देते हैं।')}</p>
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-3">
+            {memberCards.map((member, index) => (
+              <motion.div key={member.enName} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.08 }} className="rounded-[28px] border border-[var(--color-border)] bg-white p-6 shadow-[0_14px_36px_rgba(44,31,20,0.08)]">
+                <div className="mb-5 flex items-center gap-4">
+                  <img src={member.img} alt={t(member.enName, member.hiName)} className="h-20 w-20 rounded-full object-cover ring-4 ring-[rgba(193,68,14,0.12)]" />
+                  <div>
+                    <h3 className="font-serif text-[1.35rem] font-bold text-[var(--color-text-main)]">{t(member.enName, member.hiName)}</h3>
+                    <p className="mt-1 text-[0.74rem] font-bold uppercase tracking-[0.14em] text-[var(--color-terra)]">{t(member.enRole, member.hiRole)}</p>
+                  </div>
+                </div>
+                <p className="text-[0.92rem] leading-8 text-[var(--color-mid)]">{t(member.enText, member.hiText)}</p>
               </motion.div>
             ))}
           </div>
+
+          <div className="mt-8">
+            <Link to="/members" className="inline-block rounded-full border border-[var(--color-border)] bg-[var(--color-bg-2)] px-7 py-3.5 text-[0.86rem] font-bold text-[var(--color-text-main)] no-underline transition-all hover:border-[var(--color-terra)] hover:text-[var(--color-terra)]">{t('See All Members', 'सभी सदस्य देखें')}</Link>
+          </div>
+        </div>
+      </section>
+      <MissionSection />
+      <section className="bg-[var(--color-bg-2)] px-6 py-24 md:px-14">
+        <div className="mx-auto max-w-7xl">
+          <div className="mb-12 max-w-[720px]">
+            <div className="text-[0.72rem] font-bold uppercase tracking-[0.18em] text-[var(--color-terra)]">{t('Work Section', 'कार्य अनुभाग')}</div>
+            <h2 className="mt-3 font-serif text-[clamp(2rem,4vw,3.2rem)] font-black leading-[1.14] text-[var(--color-text-main)]">{t('How we create visible impact', 'हम असर कैसे बनाते हैं')}</h2>
+            <p className="mt-4 text-[0.98rem] leading-8 text-[var(--color-mid)]">{t('Our work combines alumni pride with direct student support, thoughtful programming, and long-term community participation.', 'हमारा काम alumni pride को direct student support, thoughtful programming और long-term community participation के साथ जोड़ता है।')}</p>
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-3">
+            {workCards.map((card, index) => (
+              <motion.div key={card.enTitle} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.08 }} className="overflow-hidden rounded-[28px] border border-[var(--color-border)] bg-white shadow-[0_14px_36px_rgba(44,31,20,0.08)]">
+                <img src={card.img} alt={t(card.enTitle, card.hiTitle)} className="h-56 w-full object-cover" />
+                <div className="p-6">
+                  <h3 className="font-serif text-[1.4rem] font-bold leading-[1.25] text-[var(--color-text-main)]">{t(card.enTitle, card.hiTitle)}</h3>
+                  <p className="mt-3 text-[0.92rem] leading-8 text-[var(--color-mid)]">{t(card.enDesc, card.hiDesc)}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="mt-8">
+            <Link to="/services" className="inline-block rounded-full bg-[var(--color-terra)] px-7 py-3.5 text-[0.86rem] font-bold text-white no-underline transition-all hover:-translate-y-1 hover:bg-[var(--color-terra-2)]">{t('Explore All Sessions', 'सभी सत्र देखें')}</Link>
+          </div>
         </div>
       </section>
 
-      {/* TESTIMONIALS */}
-      <section className="py-24 px-6 md:px-14 bg-[var(--color-bg-2)]">
-        <div className="grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-16 items-start">
-          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <h2 className="font-serif text-[2.4rem] font-black leading-[1.2] mb-4 text-[var(--color-text-main)]" dangerouslySetInnerHTML={{ __html: t("Words From Our <em class='text-[var(--color-terra)] not-italic'>Community</em>", "हमारे <em class='text-[var(--color-terra)] not-italic'>समुदाय</em> की आवाज़") }} />
-            <p className="text-[0.88rem] text-[var(--color-mid)] leading-[1.8] mb-6">{t('The voices that matter most — families, volunteers, and donors whose lives have intersected with ours.', 'सबसे महत्वपूर्ण आवाज़ें — परिवार, स्वयंसेवक और दानदाता जिनकी जिंदगी हमसे जुड़ी।')}</p>
-            <div className="text-[1.3rem] text-[var(--color-terra)] tracking-[0.1em] mb-1">★★★★★</div>
-            <div className="text-[0.78rem] text-[var(--color-mid)] font-semibold mb-6">{t('4.9/5 from 2,400+ donors and volunteers', '2,400+ दानदाताओं और स्वयंसेवकों से 4.9/5')}</div>
-            <Link to="/donate" className="bg-[var(--color-terra)] text-white py-3 px-8 rounded-full text-[0.88rem] font-bold no-underline inline-block transition-all hover:-translate-y-1 hover:bg-[var(--color-terra-2)] shadow-[0_6px_20px_rgba(193,68,14,0.35)]">
-              {t("Join Our Community", "हमारे समुदाय से जुड़ें")}
-            </Link>
-          </motion.div>
-          <div className="flex flex-col gap-5">
-            <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="bg-white rounded-2xl p-8 shadow-[0_4px_20px_rgba(44,31,20,0.06)] border-l-4 border-transparent transition-all hover:border-l-[var(--color-terra)] hover:shadow-[0_10px_30px_rgba(44,31,20,0.1)]">
-              <p className="font-serif italic text-[1rem] text-[var(--color-text-main)] leading-[1.7] mb-5">
-                {t('"Aangan transformed my daughter\'s life. She used to be afraid to speak in public. Last month she gave a speech at her school annual function."', '"आँगन ने मेरी बेटी की ज़िंदगी बदल दी। वो पहले सार्वजनिक में बोलने से डरती थी। पिछले महीने उसने स्कूल के वार्षिक समारोह में भाषण दिया।"')}
-              </p>
-              <div className="flex items-center gap-3">
-                <img src="https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=100&q=80" className="w-10 h-10 rounded-full object-cover border-2 border-[var(--color-terra)]" alt="" />
-                <div>
-                  <span className="text-[0.87rem] font-bold text-[var(--color-text-main)] block">{t('Savita Devi', 'सविता देवी')}</span>
-                  <span className="text-[0.73rem] text-[var(--color-mid)]">{t('Mother — Lucknow, UP', 'माँ — लखनऊ, UP')}</span>
-                </div>
+      <section id="contact" className="bg-[var(--color-text-main)] px-6 py-24 md:px-14">
+        <div className="mx-auto grid max-w-7xl gap-10 rounded-[32px] border border-white/10 bg-white/[0.03] p-8 md:grid-cols-[0.85fr_1.15fr] md:p-12">
+          <div>
+            <div className="text-[0.72rem] font-bold uppercase tracking-[0.18em] text-[var(--color-terra-light)]">{t('Contact Section', 'संपर्क अनुभाग')}</div>
+            <h2 className="mt-3 font-serif text-[clamp(2rem,4vw,3.1rem)] font-black leading-[1.14] text-white">{t('Let us build this together', 'आइए इसे साथ मिलकर आगे बढ़ाएँ')}</h2>
+            <p className="mt-5 max-w-[500px] text-[0.98rem] leading-8 text-white/70">{t('For volunteering, partnerships, school coordination, or alumni registration, reach out and our team will respond with the right next step.', 'स्वयंसेवा, साझेदारी, स्कूल coordination या alumni registration के लिए हमसे जुड़ें, हमारी टीम आपको सही अगले कदम के साथ जवाब देगी।')}</p>
+            <div className="mt-8 grid gap-4 sm:grid-cols-2">
+              <div className="rounded-[22px] border border-white/10 bg-white/5 p-5">
+                <div className="text-[0.7rem] font-bold uppercase tracking-[0.14em] text-[var(--color-terra-light)]">{t('Email', 'ईमेल')}</div>
+                <div className="mt-2 text-[0.95rem] text-white">community@delhialumni.org</div>
               </div>
-            </motion.div>
-            <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }} className="bg-white rounded-2xl p-8 shadow-[0_4px_20px_rgba(44,31,20,0.06)] border-l-4 border-transparent transition-all hover:border-l-[var(--color-terra)] hover:shadow-[0_10px_30px_rgba(44,31,20,0.1)]">
-              <p className="font-serif italic text-[1rem] text-[var(--color-text-main)] leading-[1.7] mb-5">
-                {t('"Four years of volunteering and I still get emotional. These kids have more joy in them than most adults I know."', '"चार साल की स्वयंसेवा के बाद भी मुझे भावुकता होती है। इन बच्चों में ज़्यादातर वयस्कों से ज़्यादा खुशी है।"')}
-              </p>
-              <div className="flex items-center gap-3">
-                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80" className="w-10 h-10 rounded-full object-cover border-2 border-[var(--color-terra)]" alt="" />
-                <div>
-                  <span className="text-[0.87rem] font-bold text-[var(--color-text-main)] block">{t('Siddharth Roy', 'सिद्धार्थ रॉय')}</span>
-                  <span className="text-[0.73rem] text-[var(--color-mid)]">{t('Volunteer — Kolkata', 'स्वयंसेवक — कोलकाता')}</span>
-                </div>
+              <div className="rounded-[22px] border border-white/10 bg-white/5 p-5">
+                <div className="text-[0.7rem] font-bold uppercase tracking-[0.14em] text-[var(--color-terra-light)]">{t('Phone', 'फ़ोन')}</div>
+                <div className="mt-2 text-[0.95rem] text-white">+91 95999 77744</div>
               </div>
-            </motion.div>
+            </div>
+          </div>
+
+          <div className="rounded-[28px] bg-white p-6 shadow-[0_18px_50px_rgba(0,0,0,0.18)] md:p-8">
+            <div className="grid gap-4 md:grid-cols-2">
+              <input type="text" placeholder={t('Your name', 'आपका नाम')} className="rounded-[14px] border border-[var(--color-border)] px-4 py-3.5 text-[0.92rem] text-[var(--color-text-main)] outline-none transition focus:border-[var(--color-terra)]" />
+              <input type="email" placeholder={t('Email address', 'ईमेल पता')} className="rounded-[14px] border border-[var(--color-border)] px-4 py-3.5 text-[0.92rem] text-[var(--color-text-main)] outline-none transition focus:border-[var(--color-terra)]" />
+            </div>
+            <input type="text" placeholder={t('Subject', 'विषय')} className="mt-4 w-full rounded-[14px] border border-[var(--color-border)] px-4 py-3.5 text-[0.92rem] text-[var(--color-text-main)] outline-none transition focus:border-[var(--color-terra)]" />
+            <textarea placeholder={t('Tell us how you would like to contribute', 'हमें बताइए आप कैसे योगदान देना चाहते हैं')} className="mt-4 min-h-[160px] w-full rounded-[14px] border border-[var(--color-border)] px-4 py-3.5 text-[0.92rem] leading-7 text-[var(--color-text-main)] outline-none transition focus:border-[var(--color-terra)]" />
+            <div className="mt-5 flex flex-wrap gap-4">
+              <Link to="/contact" className="inline-block rounded-full bg-[var(--color-terra)] px-7 py-3.5 text-[0.86rem] font-bold text-white no-underline transition-all hover:-translate-y-1 hover:bg-[var(--color-terra-2)]">{t('Open Full Contact Page', 'पूरा संपर्क पेज खोलें')}</Link>
+              <Link to="/donate" className="inline-block rounded-full border border-[var(--color-border)] px-7 py-3.5 text-[0.86rem] font-bold text-[var(--color-text-main)] no-underline transition-all hover:border-[var(--color-terra)] hover:text-[var(--color-terra)]">{t('Support the Mission', 'मिशन को सहयोग दें')}</Link>
+            </div>
           </div>
         </div>
       </section>
